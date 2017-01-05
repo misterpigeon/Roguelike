@@ -2,6 +2,7 @@ package entitylib;
 
 import commonlib.Node;
 import commonlib.SLinkedList;
+import javafx.animation.Animation;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -16,7 +17,9 @@ public class PhysEntity extends Entity{
     protected boolean invincibility; // is it interactable?
     protected SLinkedList<Integer> moveQueue; // queuing moves
     protected Node<Integer> current;
+    protected int AnimationSpeed = 3;
     protected BufferedImage[][] moveset;
+    protected int RandomMoves = 40;
     protected int hpcontainer; // how much hp in total
     protected int hp; // current hp
     protected int cycle; // what animation loop to run through atm (0(walking), 1(set as death anim), 2, 3, 4, 5 (these are specials, every character has up to 4 available specials))
@@ -44,7 +47,10 @@ public class PhysEntity extends Entity{
 
      */
 
-    public PhysEntity(String _name, String _path, int _columns, int _rows, int _height, int _width, int _hpcontainer, boolean isLive, int _speed, int x, int y, int gc_width, int gc_height, int _specycles, boolean isSymmetrical){
+    public PhysEntity(String _name, String _path, int _columns, int _rows, int _height, int _width, int _hpcontainer,
+                      boolean isLive, int _speed, int x, int y, int gc_width, int gc_height, int _specycles,
+                      boolean isSymmetrical){
+
         super(_name, _path, _columns, _rows, _height, _width);
         hpcontainer = _hpcontainer;
         hp = _hpcontainer;
@@ -75,40 +81,96 @@ public class PhysEntity extends Entity{
         }
     }
 
+    // Overload for advanced speed setting and random generator
+    public PhysEntity(String _name, String _path, int _columns, int _rows, int _height, int _width,
+                      int _hpcontainer, boolean isLive, int _speed, int x, int y, int gc_width,
+                      int gc_height, int _specycles, boolean isSymmetrical, int randommoves, int animspeed){
+
+        super(_name, _path, _columns, _rows, _height, _width);
+        hpcontainer = _hpcontainer;
+        hp = _hpcontainer;
+        invincibility = !isLive;
+        speed = _speed;
+        location = new Point(x, y);
+        rand = new Random();
+        moveQueue = new SLinkedList();
+        for(int i = 1; i <= 12; i++) moveQueue.addHead(0); // first twelve moves are do nothings
+        current = moveQueue.getHead();
+        restriction = new Point(gc_width, gc_height);
+        Symmetrical = isSymmetrical;
+        speccycles = _specycles;
+        cyclelength = columns;
+
+        AnimationSpeed = animspeed;
+        RandomMoves = randommoves;
+
+        // A moveset is generated for the right, and then the left
+        if(Symmetrical) {
+            moveset = new BufferedImage[speccycles + 2][cyclelength];
+        }else{
+            moveset = new BufferedImage[(speccycles + 2) * 2][cyclelength];
+        }
+        // Basically @0 walking @1 death @2 spec 1 @3 spec 2 @4 spec 3 @5 spec 4 // there is a separate sprite list for left and right animations
+        // The index works like so: if it is symmetrical then the code handles death and things but only reads half as much, it then just flips the images
+        for(int i = 0; i < rows; i++){
+            for(int s = 0; s < columns; s++){
+                moveset[i][s] = sprites[(i*cyclelength)+s];
+            }
+        }
+    }
+
     public double getHp() {return hp;}
-    public void setNeutral(){cycle = -1;}
+    public void setNeutral(){
+        cycle = -1;
+        prevcycle = -1;
+    }
     public int getSpeed(){return speed;}
     public double getHpcontainer() {return hpcontainer;}
+    public boolean getAIStatus(){return AISwitch;}
 
     public void moveLeft(){
         flip = 0;
         if(!Symmetrical) cycle = 0;
+        else cycle = -2;
         if(location.getX() >= speed) {
+            if(prevcycle == -1) framenum = 0;
             location.setLocation(location.getX() - speed, location.getY());
         }
+        prevcycle = 0;
     }
     public void moveRight(){
         flip = 1;
         if(!Symmetrical) cycle = speccycles + 2;
+        else cycle = -2;
         if(location.getX() <= restriction.getX() - speed - width - 4) {
+            if(prevcycle == -1) framenum = 0;
             location.setLocation(location.getX() + speed, location.getY());
         }
+        prevcycle = 0;
     }
     public void moveUp(){
+        if(!Symmetrical) cycle = speccycles + 2;
+        else cycle = -2;
         if(location.getY() >= speed + 24) {
+            if(prevcycle == -1) framenum = 0;
             location.setLocation(location.getX(), location.getY() - speed);
         }
+        prevcycle = 0;
     }
     public void moveDown(){
+        if(!Symmetrical) cycle = speccycles + 2;
+        else cycle = -2;
         if(location.getY() <= restriction.getY() - speed - height) {
+            if(prevcycle == -1) framenum = 0;
             location.setLocation(location.getX(), location.getY() + speed);
         }
+        prevcycle = 0;
     }
 
     // Generate will print an hp bar as well
     @Override
     public void generate(Graphics _gc) { // generate deals with the actual printing of the graphic, the default generate generates to what the current location is
-        if(stall++ % 3 == 0) framenum++;
+        if(stall++ % AnimationSpeed == 0) framenum++;
 
         if(Symmetrical) {
             if (flip == 0) { // if facing left
@@ -141,8 +203,8 @@ public class PhysEntity extends Entity{
         // AI CONTROL
         int move = rand.nextInt(5);
         if(AISwitch == true){
-            if(current.value == 0){
-                // do nothing
+            if(current.value == 0){ // neutral
+                setNeutral();
             }
             else if(current.value == 1){ // w
                 moveUp();
@@ -160,12 +222,12 @@ public class PhysEntity extends Entity{
             if(current.next != null){ // if the next move has been set then move on to the next move
                 current = current.next;
             }else{ // if not then generate the next move set
-                for(int i = 1; i <= 40; i++) moveQueue.addTail(move); // generates 40 identical moves each time
+                for(int i = 1; i <= RandomMoves; i++) moveQueue.addTail(move); // generates 40 identical moves each time
                 current = current.next;
             }
         }
     }
-    
+
     public void generate(Graphics _gc, int x, int y){ // generate at specific position, used only to initialize and to test
         location.setLocation(x,y);
         if(stall++ % 3 == 0) framenum++;
