@@ -165,8 +165,7 @@ public class PhysEntity extends Entity{
             }
         }
     }
-
-
+    
     public void generate(Graphics _gc, int x, int y){ // generate at specific position, used only to initialize and to test
         location.setLocation(x,y);
         if(stall++ % 3 == 0) framenum++;
