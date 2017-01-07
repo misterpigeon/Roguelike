@@ -343,11 +343,11 @@ public class PhysEntity extends Entity{
         if(hit >= hp) {
             hp = 0;
             for(int i = 0; i <= 2; i++){
-                for(int x = 0; x <= 2; x++){
+                for(int x = 0; x <= 3; x++){
                     temp.next = new Node(0, temp.next);
                     temp = temp.next;
                 }
-                for(int x = 0; x <= 2; x++){
+                for(int x = 0; x <= 3; x++){
                     temp.next = new Node(-3, temp.next);
                     temp = temp.next;
                 }
@@ -356,11 +356,11 @@ public class PhysEntity extends Entity{
         else {
             hp = hp - hit;
             for(int i = 0; i <= 2; i++){
-                for(int x = 0; x <= 2; x++){
+                for(int x = 0; x <= 3; x++){
                     temp.next = new Node(0, temp.next);
                     temp = temp.next;
                 }
-                for(int x = 0; x <= 2; x++){
+                for(int x = 0; x <= 3; x++){
                     temp.next = new Node(-3, temp.next);
                     temp = temp.next;
                 }
