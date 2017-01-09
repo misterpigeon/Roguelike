@@ -1,3 +1,4 @@
+
 /**
  * Created by User on 2016-12-25.
  */
@@ -15,10 +16,12 @@ public class GameFrame extends JFrame{
         Heft heft = new Heft();
         heft.setVisible(true);
         add(heft, BorderLayout.CENTER);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1100,900);
         setVisible(true);
         heft.createBufferStrategy(2);
         setResizable(false);
+
     }
 
     public static void main(String [] args){
