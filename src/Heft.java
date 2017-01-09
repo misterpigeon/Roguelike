@@ -26,15 +26,15 @@ public class Heft extends Canvas {
         setFocusable(true);
 
         // We can set the graphics reference to null until I generate the object, alternatively I can also set the reference, it doesn't really matter
-        slime0 = new PhysEntity("Slime","C:\\Users\\steve\\OneDrive\\Documents\\Java\\Roguelike\\Sprites\\slime_ss.png",
+        slime0 = new PhysEntity("Slime","C:\\Users\\steve\\OneDrive\\Documents\\Java\\Roguelike\\src\\slime_ss.png",
         68, 2, 70, 135, 10, true, 1, 550, 450,
                 1100, 900, 0, true, 100, 4); // has only a death animation
-        //slime0.startAI();
+        slime0.startAI();
 
-        slime1 = new PhysEntity("Slime","C:\\Users\\steve\\OneDrive\\Documents\\Java\\Roguelike\\Sprites\\slime_ss.png",
+        slime1 = new PhysEntity("Slime","C:\\Users\\steve\\OneDrive\\Documents\\Java\\Roguelike\\src\\slime_ss.png",
                 68, 2, 70, 135, 10, true, 1, 750, 450,
                 1100, 900, 0, true, 100, 4); // has only a death animation
-        //slime1.startAI();
+        slime1.startAI();
         Chrono chrono = new Chrono(this);
         new Timer(10, chrono).start();
     }
@@ -124,7 +124,7 @@ public class Heft extends Canvas {
         BufferStrategy strategy = getBufferStrategy();
         Graphics graphics = strategy.getDrawGraphics();
 
-        graphics.setColor(Color.WHITE);
+        graphics.setColor(Color.RED);
         graphics.fillRect(0, 0, size.width, size.height); // refreshing the screen
 
         if(slime0 != null) {
