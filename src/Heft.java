@@ -124,7 +124,7 @@ public class Heft extends Canvas {
         BufferStrategy strategy = getBufferStrategy();
         Graphics graphics = strategy.getDrawGraphics();
 
-        graphics.setColor(Color.RED);
+        graphics.setColor(Color.WHITE);
         graphics.fillRect(0, 0, size.width, size.height); // refreshing the screen
 
         if(slime0 != null) {
