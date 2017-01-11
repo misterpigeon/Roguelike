@@ -47,6 +47,9 @@ public class Heft extends Canvas {
             if(e.getKeyChar() == 'f' || e.getKeyChar() == 'F'){
                 slime0.damage(1, 0);
             }
+            if(e.getKeyChar() == 'h' || e.getKeyChar() == 'H'){
+                slime1.damage(1, 0);
+            }
         }
 
         @Override
