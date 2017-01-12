@@ -1,5 +1,6 @@
 import javax.swing.*;
 import SpriteCtrl.*;
+import commonlib.SLinkedList;
 import entitylib.*;
 
 import java.awt.*;
@@ -11,11 +12,12 @@ import java.awt.image.BufferStrategy;
 import java.util.BitSet;
 
 public class Heft extends Canvas {
-    public int page; // This handles the KeyPress event to determine what a key does on a page;
-    public PhysEntity slime0;
-    public PhysEntity slime1;
+    private int page; // This handles the KeyPress event to determine what a key does on a page;
+    private PhysEntity slime0;
+    private PhysEntity slime1;
     boolean repaintInProgress = false;
-    protected HeftKeyListener listener;
+    private HeftKeyListener listener;
+    private Point[] geoList;
 
     Heft(){
         setIgnoreRepaint(true); // lets me handle the repaint requests
@@ -26,15 +28,20 @@ public class Heft extends Canvas {
         setFocusable(true);
 
         // We can set the graphics reference to null until I generate the object, alternatively I can also set the reference, it doesn't really matter
-        slime0 = new PhysEntity("Slime","C:\\Users\\steve\\OneDrive\\Documents\\Java\\Roguelike\\src\\slime_ss.png",
+        slime0 = new PhysEntity("Slime","src\\SpriteSheets\\slime_ss.png",
         68, 2, 70, 135, 10, true, 1, 550, 450,
-                1100, 900, 0, true, 100, 4); // has only a death animation
-        slime0.startAI();
+                1100, 900, 0, true, false, 100, 4); // has only a death animation
+        //slime0.startAI();
 
-        slime1 = new PhysEntity("Slime","C:\\Users\\steve\\OneDrive\\Documents\\Java\\Roguelike\\src\\slime_ss.png",
+        slime1 = new PhysEntity("Slime","src\\SpriteSheets\\slime_ss.png",
                 68, 2, 70, 135, 10, true, 1, 750, 450,
-                1100, 900, 0, true, 100, 4); // has only a death animation
+                1100, 900, 0, true, true, 100, 4); // has only a death animation
         slime1.startAI();
+
+        geoList = new Point[2];
+        geoList[0] = slime0.getLocation();
+        geoList[1] = slime1.getLocation();
+
         Chrono chrono = new Chrono(this);
         new Timer(10, chrono).start();
     }
@@ -46,6 +53,9 @@ public class Heft extends Canvas {
         public void keyTyped(KeyEvent e) {
             if(e.getKeyChar() == 'f' || e.getKeyChar() == 'F'){
                 slime0.damage(1, 0);
+            }
+            if(e.getKeyChar() == 'h' || e.getKeyChar() == 'H'){
+                slime1.damage(1, 0);
             }
         }
 
@@ -120,21 +130,34 @@ public class Heft extends Canvas {
 
         }
         Dimension size = getSize(); // get size of canvas
-
         BufferStrategy strategy = getBufferStrategy();
         Graphics graphics = strategy.getDrawGraphics();
 
         graphics.setColor(Color.WHITE);
         graphics.fillRect(0, 0, size.width, size.height); // refreshing the screen
 
-        if(slime0 != null) {
-            if (!slime0.isDead()) slime0.generate(graphics);
-            else slime0 = null;
-        }
+        if(slime0.getLocation().getY() + slime0.getSpriteHeight() < slime1.getLocation().getY() + slime1.getSpriteHeight()) {
+            if (slime0 != null) {
+                if (!slime0.isDead()) slime0.generate(graphics);
+                else slime0 = null;
+            }
 
-        if(slime1 != null) {
-            if (!slime1.isDead()) slime1.generate(graphics);
-            else slime1 = null;
+            if (slime1 != null) {
+                if (!slime1.isDead()) slime1.generate(graphics);
+                else slime1 = null;
+            }
+        }
+        else{
+
+            if (slime1 != null) {
+                if (!slime1.isDead()) slime1.generate(graphics);
+                else slime1 = null;
+            }
+
+            if (slime0 != null) {
+                if (!slime0.isDead()) slime0.generate(graphics);
+                else slime0 = null;
+            }
         }
 
         if(graphics != null) graphics.dispose();
@@ -146,4 +169,3 @@ public class Heft extends Canvas {
         repaintInProgress = false;
     }
 }
-
