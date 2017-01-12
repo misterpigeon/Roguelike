@@ -12,12 +12,12 @@ import java.awt.image.BufferStrategy;
 import java.util.BitSet;
 
 public class Heft extends Canvas {
-    public int page; // This handles the KeyPress event to determine what a key does on a page;
-    public PhysEntity slime0;
-    public PhysEntity slime1;
+    private int page; // This handles the KeyPress event to determine what a key does on a page;
+    private PhysEntity slime0;
+    private PhysEntity slime1;
     boolean repaintInProgress = false;
-    protected HeftKeyListener listener;
-    public Point[] geoList;
+    private HeftKeyListener listener;
+    private Point[] geoList;
 
     Heft(){
         setIgnoreRepaint(true); // lets me handle the repaint requests
