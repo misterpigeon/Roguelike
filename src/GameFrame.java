@@ -21,7 +21,6 @@ public class GameFrame extends JFrame{
         setVisible(true);
         heft.createBufferStrategy(2);
         setResizable(false);
-
     }
 
     public static void main(String [] args){

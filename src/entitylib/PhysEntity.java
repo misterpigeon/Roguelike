@@ -35,9 +35,10 @@ public class PhysEntity extends Entity{
     private Random rand;
     protected Point restriction; // restricts where the entity can move
     private boolean AISwitch = false;
+    private boolean isAI = false;
+    private int randomCount = 0;
     private boolean Dead = false;
     private boolean Symmetrical = false; // is the SpriteSheet's left side the same as the right? this way we just load one side and flip the coordinates instead of the whole thing
-
     /*
     So how the SpriteSheet works is that there is a left animation, a right animation, and 5 available specials,
     when the PhysEntity is constructed, it will require the length of a cycle meaning all cycles must be the same length.
@@ -51,7 +52,7 @@ public class PhysEntity extends Entity{
 
     public PhysEntity(String _name, String _path, int _columns, int _rows, int _height, int _width, int _hpcontainer,
                       boolean isLive, int _speed, int x, int y, int gc_width, int gc_height, int _specycles,
-                      boolean isSymmetrical){
+                      boolean isSymmetrical, boolean _isAI){
 
         super(_name, _path, _columns, _rows, _height, _width);
         hpcontainer = _hpcontainer;
@@ -67,6 +68,7 @@ public class PhysEntity extends Entity{
         Symmetrical = isSymmetrical;
         speccycles = _specycles;
         cyclelength = columns;
+        isAI = _isAI;
 
         // A moveset is generated for the right, and then the left
         if(Symmetrical) {
@@ -86,7 +88,7 @@ public class PhysEntity extends Entity{
     // Overload for advanced speed setting and random generator
     public PhysEntity(String _name, String _path, int _columns, int _rows, int _height, int _width,
                       int _hpcontainer, boolean isLive, int _speed, int x, int y, int gc_width,
-                      int gc_height, int _specycles, boolean isSymmetrical, int randommoves, int animspeed){
+                      int gc_height, int _specycles, boolean isSymmetrical, boolean _isAI, int randommoves, int animspeed){
 
         super(_name, _path, _columns, _rows, _height, _width);
         hpcontainer = _hpcontainer;
@@ -102,6 +104,7 @@ public class PhysEntity extends Entity{
         Symmetrical = isSymmetrical;
         speccycles = _specycles;
         cyclelength = columns;
+        isAI = _isAI;
 
         AnimationSpeed = animspeed;
         RandomMoves = randommoves;
@@ -122,6 +125,7 @@ public class PhysEntity extends Entity{
     }
 
     public double getHp() {return hp;}
+
     public void setNeutral(){
         cycle = -1;
         prevcycle = -1;
@@ -204,7 +208,6 @@ public class PhysEntity extends Entity{
 
         }
         else {
-
             if (Symmetrical) {
                 if (flip == 0) { // if facing left
                     if (cycle == -1) _gc.drawImage(moveset[0][0], location.x, location.y, null);
@@ -313,9 +316,15 @@ public class PhysEntity extends Entity{
                 moveRight();
             }
             else if(current.value == -3){ // print blank
+                if(randomCount < 12) randomCount++;
+                else if(randomCount == 12) {
+                    randomCount = 0;
+                    if(!isAI) {
+                        stopAI();
+                    }
+                }
                 setNeutralBlank();
             }
-
             if(current.next != null){ // if the next move has been set then move on to the next move
                 current = current.next;
             }else{ // if not then generate the next move set
@@ -338,8 +347,10 @@ public class PhysEntity extends Entity{
     }
 
     public void damage(int hit, int side){
+        if(invincibility) return;
         Node<Integer> temp = current;
         startAI();
+        // O(1)
         if(hit >= hp) {
             hp = 0;
             for(int i = 0; i <= 2; i++){
@@ -370,5 +381,9 @@ public class PhysEntity extends Entity{
         System.out.println("HIT: "+hit);
         System.out.println("HEALTH: "+hp);
 
+    }
+
+    public Point getLocation(){ // keep in mind that this is the top left corner of the image
+        return location;
     }
 }
