@@ -43,6 +43,7 @@ public class SpriteSheet{
         width = _width;
         file = new File(path);
         try {
+
             sheetImg = ImageIO.read(file);
         }
         catch(IOException e) {
