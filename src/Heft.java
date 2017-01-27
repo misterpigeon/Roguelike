@@ -31,7 +31,7 @@ public class Heft extends Canvas {
         slime0 = new PhysEntity("Slime","src\\SpriteSheets\\slime_ss.png",
         68, 2, 70, 135, 10, true, 1, 550, 450,
                 1100, 900, 0, true, false, 100, 4); // has only a death animation
-        //slime0.startAI();
+        slime0.startAI();
 
         slime1 = new PhysEntity("Slime","src\\SpriteSheets\\slime_ss.png",
                 68, 2, 70, 135, 10, true, 1, 750, 450,
@@ -136,27 +136,24 @@ public class Heft extends Canvas {
         graphics.setColor(Color.WHITE);
         graphics.fillRect(0, 0, size.width, size.height); // refreshing the screen
 
-        if(slime0.getLocation().getY() + slime0.getSpriteHeight() < slime1.getLocation().getY() + slime1.getSpriteHeight()) {
+        // layering
+        if(slime0.getLocation().getY() < slime1.getLocation().getY()) {
             if (slime0 != null) {
                 if (!slime0.isDead()) slime0.generate(graphics);
-                else slime0 = null;
             }
 
             if (slime1 != null) {
                 if (!slime1.isDead()) slime1.generate(graphics);
-                else slime1 = null;
             }
         }
         else{
 
             if (slime1 != null) {
                 if (!slime1.isDead()) slime1.generate(graphics);
-                else slime1 = null;
             }
 
             if (slime0 != null) {
                 if (!slime0.isDead()) slime0.generate(graphics);
-                else slime0 = null;
             }
         }
 
