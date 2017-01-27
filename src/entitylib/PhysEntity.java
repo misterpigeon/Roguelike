@@ -166,7 +166,8 @@ public class PhysEntity extends Entity{
         prevcycle = 1;
     }
     public void moveUp(){
-        cycle = 1;
+        if(flip == 1 && !Symmetrical) cycle = speccycles + 2;
+        else if(flip == 0 && !Symmetrical) cycle = 0;
         if(location.getY() >= speed + 24) {
             if(prevcycle == -1 || prevcycle == -2) framenum = 0;
             location.setLocation(location.getX(), location.getY() - speed);
@@ -174,9 +175,12 @@ public class PhysEntity extends Entity{
         prevcycle = 1;
     }
     public void moveDown(){
-        cycle = 1;
+        if(flip == 1 && !Symmetrical) cycle = speccycles + 2;
+        else if(flip == 0 && !Symmetrical) cycle = 0;
         if(location.getY() <= restriction.getY() - speed - height) {
-            if(prevcycle == -1 || prevcycle == -2) framenum = 0;
+            if(prevcycle == -1 || prevcycle == -2) {
+                framenum = 0;
+            }
             location.setLocation(location.getX(), location.getY() + speed);
         }
         prevcycle = 1;
@@ -201,7 +205,11 @@ public class PhysEntity extends Entity{
                 }
             }
             else{
-                _gc.drawImage(moveset[(2 + flip * rows/2) - 1][framenum], location.x, location.y, null);
+                if(flip == 0) {
+                    _gc.drawImage(moveset[1][framenum], location.x, location.y, null);
+                }else{
+                    _gc.drawImage(moveset[speccycles + 3][framenum],location.x,location.y,null);
+                }
             }
             if(framenum == columns - 1) {
                 framenum = 0;
@@ -229,8 +237,9 @@ public class PhysEntity extends Entity{
                         _gc.drawImage(moveset[2 + speccycles][0], location.x, location.y, null);
                     }
                 } else if (cycle == -2) ;
-                else
+                else {
                     _gc.drawImage(moveset[cycle][framenum], location.x, location.y, width, height, null); // horizontal flip
+                }
             }
             if (framenum == cyclelength - 1) framenum = 0;
             // hp bar code
@@ -241,6 +250,7 @@ public class PhysEntity extends Entity{
             _gc.setColor(Color.WHITE);
 
             // AI CONTROL
+            RandomMoves = rand.nextInt(60) + 35;
             int move = rand.nextInt(5);
             if (AISwitch == true) {
                 if (current.value == 0) { // neutral
