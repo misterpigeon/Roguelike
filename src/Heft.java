@@ -2,7 +2,6 @@ import javax.swing.*;
 import SpriteCtrl.*;
 import commonlib.SLinkedList;
 import entitylib.*;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -28,12 +27,12 @@ public class Heft extends Canvas {
         setFocusable(true);
 
         // We can set the graphics reference to null until I generate the object, alternatively I can also set the reference, it doesn't really matter
-        slime0 = new PhysEntity("Slime","src\\SpriteSheets\\slime_ss.png",
+        slime0 = new PhysEntity("Slime","SpriteSheets/slime_ss.png",
         68, 4, 70, 135, 10, true, 1, 550, 450,
                 1100, 900, 0, false, false, 100, 4); // has only a death animation
         slime0.startAI();
 
-        slime1 = new PhysEntity("Slime","src\\SpriteSheets\\slime_ss.png",
+        slime1 = new PhysEntity("Slime","SpriteSheets/slime_ss.png",
                 68, 2, 70, 135, 10, true, 1, 750, 450,
                 1100, 900, 0, true, true, 100, 4); // has only a death animation
         slime1.startAI();

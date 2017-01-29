@@ -1,9 +1,7 @@
 package entitylib;
 
-import com.sun.javafx.scene.layout.region.Margins;
 import commonlib.Node;
 import commonlib.SLinkedList;
-import javafx.animation.Animation;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
