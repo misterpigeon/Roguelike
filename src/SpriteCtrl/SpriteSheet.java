@@ -1,8 +1,5 @@
 package SpriteCtrl;
-import com.sun.org.apache.bcel.internal.generic.RETURN;
 import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -43,7 +40,6 @@ public class SpriteSheet{
         width = _width;
         file = new File(path);
         try {
-
             sheetImg = ImageIO.read(file);
         }
         catch(IOException e) {

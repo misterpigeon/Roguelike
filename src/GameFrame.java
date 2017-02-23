@@ -2,13 +2,8 @@
 /**
  * Created by User on 2016-12-25.
  */
-import java.awt.*;
-import java.io.*;
-import java.net.URL;
-
-import entitylib.*;
-
 import javax.swing.*;
+import java.awt.*;
 
 public class GameFrame extends JFrame{
     GameFrame(){
