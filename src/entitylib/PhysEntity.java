@@ -10,6 +10,9 @@ import java.util.Random;
 /**
  * This is the child class of Entity and makes it interactable and more dynamic, there is a moveset that corresponds to
  * directions left and right. This is still in progress and I will update whenever I need more functionality.
+ * (sorry if this is super bad oop shayn, just trying to test out sprite stuff before I actually start)
+ *
+ * SET FOR STRUCTURE CHANGE
  * @author Steven Li, Syed Ali (Shayn)
  * @version 27-Jan-17
  */
